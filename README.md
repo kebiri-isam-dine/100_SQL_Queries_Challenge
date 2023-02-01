@@ -16,7 +16,7 @@
 
 
 ## About The Project
-Les 100 requetes SQL les plus fréquentes durant mon parcours, 
+Les 100 requetes SQL les plus fréquentes durant mon parcours, on utilisera ``XAMPP v3.3.0`` serveur Web, une distribution Apache open source contenant ``MySQL`` et ``PHP``
 
 
 ### Keywords
@@ -35,47 +35,12 @@ pip install XXXXX
 ```
 
 
-## Packages
-
-```python
-
-import genopy 
-from Bio.Align.Applications import ClustalOmegaCommandline 
-import pandas as pd
-import numpy as np
-```
 
 
 ## Dataset
-
-Le Dataset se trouve [ici](data-sequence.txt)
-
-| Badge                                                                                                                                 | URL                                                                                                                       |
-| ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| <img src="https://custom-icon-badges.herokuapp.com/badge/comet%20ml-262c3e?style=for-the-badge&logo=logo_comet_ml&logoColor=white" /> | `https://custom-icon-badges.herokuapp.com/badge/comet%20ml-262c3e?style=for-the-badge&logo=logo_comet_ml&logoColor=white` |
-| <img src="https://img.shields.io/badge/dialogflow-FF9800?style=for-the-badge&logo=dialogflow&logoColor=white" />                      | `https://img.shields.io/badge/dialogflow-FF9800?style=for-the-badge&logo=dialogflow&logoColor=white`                      |
-| <img src="https://img.shields.io/badge/Keras-FF0000?style=for-the-badge&logo=keras&logoColor=white" />                                | `https://img.shields.io/badge/Keras-FF0000?style=for-the-badge&logo=keras&logoColor=white`                                |
-| <img src="https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" />                            | `https://img.shields.io/badge/PyTorch-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white`                            |
-| <img src="https://img.shields.io/badge/PyTorch%20Lightning-792DE4?style=for-the-badge&logo=pytorch-lightning&logoColor=white" />      | `https://img.shields.io/badge/PyTorch%20Lightning-792DE4?style=for-the-badge&logo=pytorch-lightning&logoColor=white`      |
-| <img src="https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white" />                      | `https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white`                      |
-| <img src="https://img.shields.io/badge/Weights_&_Biases-FFBE00?style=for-the-badge&logo=WeightsAndBiases&logoColor=white" />          | `https://img.shields.io/badge/Weights_&_Biases-FFBE00?style=for-the-badge&logo=WeightsAndBiases&logoColor=white`  
-
-
-
-## Usage
-
-```python
-import exempleee
-
-# returns 'words'
-exempleee.pluralize('word')
-
-# returns 'geese'
-exempleee.pluralize('goose')
-
-# returns 'phenomenon'
-exempleee.singularize('phenomena')
-```
+Base de données d'un jeu rpg qui contient des personnages et des armes, lancer le script [Data.sql](/Data.sql) pour importer les tables dans ``phpMyAdmin``
+Le MDP (Modèle Physique de Données) : 
+<img src="/Captures/MDP.png">
 
 ## Output
 
