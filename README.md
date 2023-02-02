@@ -229,8 +229,6 @@ SELECT personnage.nom as "Nom personnage", arme.nom as "Nom arme"
 from personnage
 INNER JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
 INNER JOIN arme ON arme.idArme = dispose.idArme;
-
-
 ```
 
 28. Récupérer toutes les armes qui ne sont pas à distance
@@ -249,28 +247,44 @@ INNER JOIN arme ON arme.idArme = personnage.idArmeUtilise
 INNER JOIN typearme ON typearme.idTypeArme = arme.idTypeArme
 INNER JOIN classe ON personnage.idClasse = classe.idClasse
 WHERE classe.nom = 'Guerrier'
-
-
 ```
 
-30. 
+30. Récupérer toutes les armes dont disposent les joueurs ayant le level 10
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom as "Nom personnage", arme.nom as "Nom arme", level
+from personnage
+INNER JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
+INNER JOIN arme ON arme.idArme = dispose.idArme
+WHERE personnage.level = 10
 ```
 
-31. 
+31. memes requete que 30. mais triées par idPersonnage
 ``` sql
-SELECT * FROM ;
+SELECT personnage.idPersonnage, personnage.nom as "Nom personnage", arme.nom as "Nom arme", level
+from personnage
+INNER JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
+INNER JOIN arme ON arme.idArme = dispose.idArme
+WHERE personnage.level = 10
+ORDER BY personnage.idPersonnage;
+-- ASC ou DESC
 ```
 
-32. 
+32. Récupérer la moyenne des dégats des armes à distance
 ``` sql
-SELECT * FROM ;
+SELECT AVG(degat) as "la moyenne des dégats des armes à distance"
+FROM arme
+INNER JOIN typearme ON arme.idTypeArme = arme.idTypeArme
+WHERE typearme.estDistance = True;
 ```
 
-33. 
+33. Récupérer tous les personnages disposant d'une arme d'un type commençant par "a"
 ``` sql
-SELECT * FROM ;
+SELECT DISTINCT(personnage.nom) as "Nom personnage"
+from personnage
+INNER JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
+INNER JOIN arme ON arme.idArme = dispose.idArme
+INNER JOIN typearme ON arme.idTypeArme = arme.idTypeArme
+WHERE typearme.libelle LIKE "A%";
 ```
 
 34. 
