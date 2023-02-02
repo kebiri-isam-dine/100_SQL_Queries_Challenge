@@ -18,12 +18,8 @@
 
 
 ## About The Project
-Les 100 requetes SQL les plus fréquentes durant mon parcours, on utilisera ``XAMPP v3.3.0`` serveur Web, une distribution Apache open source contenant ``MySQL`` et ``PHP``
+CHALLENGE : 100 requêtes SQL sur un Dataset de jeu, on utilisera ``XAMPP v3.3.0`` serveur Web, une distribution Apache open source contenant ``MySQL`` et ``PHP``
 
-
-### Keywords
-
-SQL, XAMPP
 
 
 
@@ -39,7 +35,7 @@ Le MDP (Modèle Physique de Données) :
 
 ## Queries
 
-- ##### SELECT
+#### SELECT
 
 1. Récupérer tous les personnages
 
@@ -76,7 +72,7 @@ SELECT libelle as "Types d'armes de jeu"
 FROM typearme;
 ```
 
-- ##### Fonctions calculs : COUNT, SUM, AVG
+#### Fonctions calculs : COUNT, SUM, AVG, MIN, MAX
 
 6. Récupérer le nombre d'armes existantes
 ``` sql
@@ -84,567 +80,532 @@ SELECT count(*) as "Nombre d'armes"
 FROM arme;
 ```
 
-7. 
+7. Afficher le nombre de personnages du jeu
 ``` sql
-select *
-from ;
+SELECT count(*) as "Nombre de personnages"
+FROM personnage;
 ```
 
-8. 
+8. Récupérer la moyenne des niveaux des personnages du jeu
 ``` sql
-select *
-from ;
+SELECT AVG(LEVEL) as "Moyenne des niveaux des personnages"
+FROM personnage;
 ```
 
-9. 
+9. Récupérer la somme des points de force, d'agilité et d'intelligence de toutes les classes
+
 ``` sql
-select *
-from ;
+SELECT SUM(baseAgi) as "Moyenne d'agilité", SUM(baseIntel) as "Moyenne d'intelligence", SUM(baseForce) as "Moyenne de force"
+FROM classe;
 ```
-10. 
+10. Récupérer le level min et max des armes de jeu
 ``` sql
-select *
-from ;
+SELECT MIN(levelMin) as "level min", MAX(levelMin) as "level max"
+FROM arme;
 ```
 
-11. 
+11. Additionner le nombre de points de caractéristique de toutes les classes
 ``` sql
-select *
-from ;
+SELECT nom, baseForce + baseIntel + baseAgi as "nombre de points de caractéristique"
+FROM classe;
 ```
 
-12. 
+#### String : CONCAT, SUBSTRING, LEFT
+
+12. Afficher le nom et le surnom des personnages dans une seule colonne (concaténation)
 ``` sql
-select *
-from ;
+SELECT CONCAT(nom, " ",surnom) as "Personnage"
+FROM personnage;
 ```
 
-13. 
+13. Afficher les noms des classes avec les points de caractéristique dans une seule colonne
 ``` sql
-select *
-from ;
+SELECT CONCAT(nom, ": ","A = ",baseAgi,", I = ",baseIntel,", F = ",baseForce) as "Classe"
+FROM classe;
 ```
 
-14. 
+14. Afficher les 6 premières lettres des noms des personnages
 ``` sql
-select *
-from ;
+SELECT SUBSTRING(nom,1,6) 
+FROM personnage;
 ```
 
-15. 
+15. Afficher les 5 premières lettres des classes concaténées au 20 premières lettres de la description
 ``` sql
-select *
-from ;
+SELECT CONCAT(SUBSTRING(nom,1,5)," : ", SUBSTRING(description,1,20)) as "Description des classe"
+FROM classe;
 ```
+
+#### WHERE
 
 16. 
 ``` sql
-select *
-from ;
+SELECT * 
+FROM arme 
+WHERE levelMin >5
 ```
 
-17. 
+17. Récupérer toutes les armes ayant un nombre de dégats < à 25
 ``` sql
-select *
-from ;
+SELECT * 
+FROM arme 
+WHERE degat <25
 ```
 
-18. 
+18. Récupérer toutes les personnages ayant le level 10 et n'afficher que leur nom et leur surnom
+
 ``` sql
-select *
-from ;
+SELECT nom, surnom
+FROM personnage
+WHERE level =10
 ```
 
-19. 
+19. Récupérer tous les armes à distance
 ``` sql
-select *
-from ;
+SELECT *
+FROM typearme
+WHERE estDistance = true
 ```
 
-20. 
+#### Les Opérateurs : AND, OR, BETWEEN
+
+20. Récupérer tous les armes ayant un level min compris entre 4 et 8 inclus
 ``` sql
-select *
-from ;
+SELECT *
+FROM arme
+WHERE levelMin BETWEEN 4 and 8
+-- BETWEEN is inclusive by default
 ```
 
-21. 
+21. Récupérer tous les personnages ayant un identifiant <= à 3 et un level = à 10
 ``` sql
-select *
-from ;
+SELECT *
+FROM personnage
+WHERE idPersonnage <=3 and level =10
 ```
 
-22. 
+#### JOIN
+
+22. Récupérer tous les personnages et leur classe
 ``` sql
-select *
-from ;
+SELECT * 
+FROM personnage
+INNER JOIN classe ON personnage.idClasse = classe.idClasse;
 ```
 
-23. 
+23. Récupérer toutes les armes et leurs type, et afficher que le nom, levelMin, libelle et estDistance
 ``` sql
-select *
-from ;
+SELECT nom, levelMin, libelle, estDistance 
+FROM arme
+INNER JOIN typearme ON arme.idTypeArme = typearme.idTypeArme;
 ```
 
-24. 
+24. Récupérer le nom des personnages et le nom de leur classe
 ``` sql
-select *
-from ;
+SELECT personnage.nom as "Nom personnage", classe.nom as "Nom classe"
+FROM personnage
+INNER JOIN classe ON personnage.idClasse = classe.idClasse;
 ```
 
-25. 
+25. Récupérer l'arme qui est utilisée par chaque personnage
 ``` sql
-select *
-from ;
+SELECT personnage.nom as "Nom personnage", arme.nom as "Nom arme"
+FROM personnage
+INNER JOIN arme ON personnage.idArmeUtilise = arme.idArme;
 ```
 
-26. 
+26. Récupérer l'arme qui est utilisée par chaque personnage et le type d'arme
+
 ``` sql
-select *
-from ;
+SELECT personnage.nom as "Nom personnage", arme.nom as "Nom arme", typearme.libelle as "Type d'arme"
+FROM personnage
+INNER JOIN arme ON personnage.idArmeUtilise = arme.idArme
+INNER JOIN typearme ON arme.idTypeArme = typearme.idTypeArme;
 ```
 
-27. 
+27. Récupérer toutes les armes de tous les personnages
 ``` sql
-select *
-from ;
+SELECT personnage.nom as "Nom personnage", arme.nom as "Nom arme"
+from personnage
+INNER JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
+INNER JOIN arme ON arme.idArme = dispose.idArme;
+
+
 ```
 
-28. 
+28. Récupérer toutes les armes qui ne sont pas à distance
 ``` sql
-select *
-from ;
+SELECT arme.nom as "Nom arme", levelMin, degat, typearme.libelle as "Type"
+from arme
+INNER JOIN typearme ON arme.idTypeArme = typearme.idTypeArme
+WHERE estDistance = False;
 ```
 
-29. 
+29. Récupérer l'arme utilisée par chaque guerrier
 ``` sql
-select *
-from ;
+SELECT personnage.nom as "Nom personnage", arme.nom as "Nom arme", typearme.libelle as "Type d'arme" 
+from personnage
+INNER JOIN arme ON arme.idArme = personnage.idArmeUtilise
+INNER JOIN typearme ON typearme.idTypeArme = arme.idTypeArme
+INNER JOIN classe ON personnage.idClasse = classe.idClasse
+WHERE classe.nom = 'Guerrier'
+
+
 ```
 
 30. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 31. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 32. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 33. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 34. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 35. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 36. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 37. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 38. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 39. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 40. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 41. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 42. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 43. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 44. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 45. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 46. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 47. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 48. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 49. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 50. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 51. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 52. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 53. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 54. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 55. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 56. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 57. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 58. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 59. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 60. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 61. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 62. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 63. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 64. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 65. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 66. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 67. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 68. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 69. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 70. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 71. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 72. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 73. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 74. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 75. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 76. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 77. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 78. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 79. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 80. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 81. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 82. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 83. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 84. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 85. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 86. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 87. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 88. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 89. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 90. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 91. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 92. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 93. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 94. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 95. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 96. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 97. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 98. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 99. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 100. 
 ``` sql
-select *
-from ;
+SELECT * FROM ;
 ```
 
 
