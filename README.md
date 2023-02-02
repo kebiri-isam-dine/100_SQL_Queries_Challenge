@@ -138,7 +138,7 @@ FROM classe;
 
 #### WHERE
 
-16. 
+16. Récupérer toutes les armes dont le levelMin est >5
 ``` sql
 SELECT * 
 FROM arme 
