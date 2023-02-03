@@ -287,87 +287,189 @@ INNER JOIN typearme ON arme.idTypeArme = arme.idTypeArme
 WHERE typearme.libelle LIKE "A%";
 ```
 
-34. 
+34. Récupérer tous les types d'armes, et afficher les armes pour chaque type (meme les types qui n'ont pas d'arme)
 ``` sql
-SELECT * FROM ;
+SELECT arme.nom, typearme.libelle as "type"
+FROM arme
+RIGHT JOIN typearme ON arme.idTypeArme = typearme.idTypeArme;
+-- jointure externe poir avoir toutes les types d'armes meme les types d'armes NULL
 ```
 
-35. 
+35. Récupérer toutes les armes et afficher le personnage qui les utilis, ordonnées par levelMin
 ``` sql
-SELECT * FROM ;
+SELECT arme.nom, personnage.nom as "Nom personnage", arme.levelMin
+FROM arme
+Left JOIN personnage ON arme.idArme = personnage.idArmeUtilise
+ORDER BY levelMin;
 ```
 
-36. 
+##### Regroupement : GROUP BY, HAVING
+
+36. Afficher le nombre d'arme par type d'arme
 ``` sql
-SELECT * FROM ;
+SELECT typearme.libelle AS "Type d'arme", COUNT(*) AS "Nombre d'arme"
+FROM arme
+INNER JOIN typearme ON arme.idTypeArme = typearme.idTypeArme
+GROUP BY typearme.libelle
+ORDER BY COUNT(*) DESC;
 ```
 
-37. 
+37. Afficher le nombre de personnage par classe
 ``` sql
-SELECT * FROM ;
+SELECT classe.nom AS "Type de classe", COUNT(*) AS "Nombre de personnage"
+FROM personnage
+INNER JOIN classe ON personnage.idClasse = classe.idClasse
+GROUP BY classe.nom
+ORDER BY COUNT(*) DESC;
 ```
 
-38. 
+38. Afficher le nombre d'armes dont dispose chaque personnage 
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom AS "Personnage", COUNT(*) AS "Nombre d'arme"
+FROM arme
+INNER JOIN dispose ON dispose.idArme = arme.idArme
+INNER JOIN personnage ON personnage.idPersonnage = dispose.idPersonnage
+GROUP BY personnage.nom
+ORDER BY COUNT(*) DESC;
+-- l'odre des jointures est IMPORTANT
 ```
 
-39. 
+39. Afficher le nombre d'armes dont dispose chaque personnage mais seulement les guerriers
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom AS "Personnage", COUNT(*) AS "Nombre d'arme"
+FROM arme
+INNER JOIN dispose ON dispose.idArme = arme.idArme
+INNER JOIN personnage ON personnage.idPersonnage = dispose.idPersonnage
+INNER JOIN classe ON personnage.idClasse = classe.idClasse
+WHERE classe.nom = 'Guerrier'
+GROUP BY personnage.nom
+ORDER BY COUNT(*) DESC;
 ```
 
-40. 
+40. Afficher le nombre de personnages par arme
 ``` sql
-SELECT * FROM ;
+SELECT arme.nom AS "Arme", COUNT(personnage.idPersonnage) AS "Nombre de personnages"
+FROM personnage
+RIGHT JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
+RIGHT JOIN arme ON dispose.idArme = arme.idArme
+GROUP BY arme.nom
+ORDER BY COUNT(*) DESC;
+-- eviter de faire des COUNT(*), pour récuérer le nombre réel réaliser des COUNT() sur les colonnes
 ```
 
-41. 
+41. Afficher le niveau moyen de chaque classe
 ``` sql
-SELECT * FROM ;
+SELECT classe.nom AS "Classe", AVG(personnage.level) AS "Niveau moyen"
+FROM classe
+INNER JOIN personnage ON personnage.idClasse = classe.idClasse
+GROUP BY classe.nom
+ORDER BY COUNT(*) ASC;
 ```
 
-42. 
+42. Afficher le niveau moyen de chaque classe et ne récupérer que les classes ayant un niveau min de 9
+
 ``` sql
-SELECT * FROM ;
+SELECT classe.nom AS "Classe", AVG(personnage.level) AS "Niveau moyen"
+FROM classe
+INNER JOIN personnage ON personnage.idClasse = classe.idClasse
+GROUP BY classe.nom
+HAVING AVG(personnage.level)>9
+ORDER BY COUNT(*) ASC;
+-- HAVING pour filtrer sur les fonctions de calculs AVG, COUNT, SUM, MIN, MAX
 ```
 
-43. 
+43. Afficher le nombre de personnages par arme et ne garder que les armes ayant entre 1 et 2 utilisateurs (table dispose) 
 ``` sql
-SELECT * FROM ;
+SELECT arme.nom AS "Arme", COUNT(personnage.idPersonnage) AS "Nombre de personnages"
+FROM personnage
+RIGHT JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
+RIGHT JOIN arme ON dispose.idArme = arme.idArme
+GROUP BY arme.nom
+HAVING COUNT(personnage.idPersonnage) BETWEEN 1 AND 2
+ORDER BY COUNT(*) DESC;
 ```
 
-44. 
+44. Afficher le nombre d'arme par type d'arme mais ne prendre que les armes de corps à corps présentes au max 1 fois
 ``` sql
-SELECT * FROM ;
+SELECT typearme.libelle AS "Type d'arme", COUNT(arme.idArme) AS "Nombre d'armes"
+FROM arme
+RIGHT JOIN typearme ON arme.idTypeArme = typearme.idTypeArme
+WHERE typearme.estDistance = False
+GROUP BY typearme.libelle
+HAVING COUNT(arme.idArme) <= 1
+ORDER BY COUNT(*) DESC;
+-- jointure externe TRES IMPORTANTE
+-- on peut avoir WHERE et HAVING dans une seule requete
 ```
 
-45. 
+#### Requetes imbriquées (Sous-Requetes)
+
+45. Récupérer les armes ayant un nombre de dégats > à la moyenne du nombre de dégats de toutes les armes
 ``` sql
-SELECT * FROM ;
+SELECT arme.nom, arme.degat
+FROM arme
+WHERE arme.degat >
+    (SELECT AVG(arme.degat)
+     FROM arme)
+ORDER BY arme.degat DESC;
 ```
 
-46. 
+46. Récupérer les personnages ayant un level < à la moyenne
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom, personnage.level
+FROM personnage
+WHERE personnage.level <
+    (SELECT AVG(personnage.level)
+     FROM personnage)
+ORDER BY personnage.level DESC;
 ```
 
-47. 
+47. Récupérer les personnages ayant un level > à la moyenne des archers
+
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom, personnage.level
+from personnage
+WHERE personnage.level >
+ (SELECT AVG(personnage.level)
+    FROM personnage
+    INNER JOIN classe ON personnage.idClasse = classe.idClasse
+    WHERE classe.nom = 'Archer')
+ORDER BY personnage.level DESC;
+-- attention au double jointure (pas la peine)
 ```
 
-48. 
+48. Pour les armes à distance, récupérer le nombre max d'occurence du type arme
+
 ``` sql
-SELECT * FROM ;
+SELECT MAX(NombreDarmes) as "le nombre max d'occurence du type arme"
+FROM
+(SELECT typearme.libelle, COUNT(*) AS "NombreDarmes"
+FROM arme
+INNER JOIN typearme ON typearme.idTypeArme = arme.idTypeArme
+WHERE typearme.estDistance = True
+GROUP BY typearme.libelle) TableDynamique
+-- TableDynamique : il est nécessaire de nommer la table dynamique qu'on vient de créer
 ```
 
-49. 
+49. Récupérer les types d'armes ayant le nombre égale d'occurrence de la précédente reuquete
+
 ``` sql
-SELECT * FROM ;
+SELECT typearme.libelle AS "Type d'arme", COUNT(*) AS "Nombre d'armes"
+FROM typearme
+INNER JOIN arme ON typearme.idTypeArme = arme.idTypeArme
+GROUP BY typearme.libelle
+HAVING COUNT(*) = 
+(SELECT MAX(NombreDarmes) as "le nombre max d'occurence du type arme"
+FROM
+(SELECT typearme.libelle, COUNT(*) AS "NombreDarmes"
+FROM arme
+INNER JOIN typearme ON typearme.idTypeArme = arme.idTypeArme
+WHERE typearme.estDistance = True
+GROUP BY typearme.libelle) TableDynamique)
+-- l'astuce est de séparer et traiter chaque requête à part pour pouvoir après les imbriquer correctement
 ```
 
-50. 
+50. Récupérer les armes ayant un nombre de dégats > au nombre de dégats des arcs
 ``` sql
 SELECT * FROM ;
 ```
