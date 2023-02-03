@@ -27,7 +27,10 @@ CHALLENGE : 100 requêtes SQL sur un Dataset de jeu, on utilisera ``XAMPP v3.3.0
 
 
 ## Dataset
-Base de données d'un jeu rpg qui contient des personnages et des armes, lancer le script [Data.sql](/Data.sql) pour importer les tables dans ``phpMyAdmin``    
+Base de données d'un jeu rpg qui contient des personnages et des armes, lancer le script [DataBrutes.sql](/DataBrutes.sql) pour importer les tables dans ``phpMyAdmin``
+
+
+[Data.sql](Data.sql) représente la base de données après les modifications en SQL      
 
 
 Le MDP (Modèle Physique de Données) : 
@@ -402,7 +405,7 @@ ORDER BY COUNT(*) DESC;
 -- on peut avoir WHERE et HAVING dans une seule requete
 ```
 
-#### Requetes imbriquées (Sous-Requetes)
+#### Requetes imbriquées (Sous-Requetes) : ALL, IN
 
 45. Récupérer les armes ayant un nombre de dégats > à la moyenne du nombre de dégats de toutes les armes
 ``` sql
@@ -471,47 +474,82 @@ GROUP BY typearme.libelle) TableDynamique)
 
 50. Récupérer les armes ayant un nombre de dégats > au nombre de dégats des arcs
 ``` sql
-SELECT * FROM ;
+SELECT *
+FROM arme
+WHERE arme.degat > ALL(
+ SELECT arme.degat
+    FROM arme
+    RIGHT JOIN typearme ON arme.idTypeArme = typearme.idTypeArme
+    WHERE typearme.libelle = 'Arc') 
+-- quand on compare à un SRING, faut vraiment bien vérifier l'orthographe de ce STRING
 ```
 
-51. 
+51. Récupérer les armes de corp à corp sans utiliser de jointure
 ``` sql
-SELECT * FROM ;
+SELECT *
+FROM arme
+WHERE arme.idTypeArme IN(
+    SELECT typearme.idTypeArme
+    FROM typearme
+    WHERE typearme.estDistance = False) 
 ```
 
-52. 
+52. Requete précédente avec jointure
 ``` sql
-SELECT * FROM ;
+SELECT * 
+FROM arme
+INNER JOIN typearme ON arme.idTypeArme = typearme.idTypearme
+WHERE typearme.estDistance = False;
 ```
 
-53. 
+#### Gestion CRUD
+
+53. Créer la table attaque
 ``` sql
-SELECT * FROM ;
+CREATE TABLE attaque
+(
+    idAttaque INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    nom VARCHAR(60)
+)
 ```
 
-54. 
+54. Modifier la table pour ajouter deux champs
 ``` sql
-SELECT * FROM ;
+ALTER TABLE attaque
+ADD baseDegat INT,
+ADD test TINYINT;
 ```
 
-55. 
+55. Modifier le champs test en le passant à varchar(50)
 ``` sql
-SELECT * FROM ;
+ALTER TABLE attaque
+MODIFY test VARCHAR(50);
 ```
 
-56. 
+56. Renommer le champs test en toto
 ``` sql
-SELECT * FROM ;
+ALTER TABLE attaque
+CHANGE test toto INT;
 ```
 
-57. 
+57. Supprimer le champs test (toto)
 ``` sql
-SELECT * FROM ;
+ALTER TABLE attaque
+DROP toto;
+-- la BD MySQL demande confirmation avant de supprimer
 ```
 
-58. 
+58. Créer la table "utilise" contenant l'id d'un personnage et l'id d'une attaque, et le level d'une attaque
 ``` sql
-SELECT * FROM ;
+CREATE TABLE utilise 
+(
+    idAttaque INT NOT NULL,
+    idPersonnage INT NOT NULL,
+    levelAttaque INT,
+    PRIMARY KEY (idAttaque, idPersonnage),
+    CONSTRAINT FK_ATTAQUE_UTILISE FOREIGN KEY (idAttaque) REFERENCES attaque(idAttaque),
+    CONSTRAINT FK_PERSONNAGE_UTILISE FOREIGN KEY (idPersonnage) REFERENCES personnage(idPersonnage)
+);
 ```
 
 59. 
