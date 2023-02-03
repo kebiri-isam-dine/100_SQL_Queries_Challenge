@@ -34,7 +34,10 @@ Base de données d'un jeu rpg qui contient des personnages et des armes, lancer 
 
 
 Le MDP (Modèle Physique de Données) : 
-<img src="/Captures/MDP.png">
+<img src="/Captures/MDP.png">    
+
+Le MDP après les modifications :
+<img src="/Captures/MDP2.png">
 
 ## Queries
 
