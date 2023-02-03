@@ -30,7 +30,7 @@ CHALLENGE : 100 requêtes SQL sur un Dataset de jeu, on utilisera ``XAMPP v3.3.0
 Base de données d'un jeu rpg qui contient des personnages et des armes, lancer le script [DataBrutes.sql](/DataBrutes.sql) pour importer les tables dans ``phpMyAdmin``
 
 
-[Data.sql](Data.sql) représente la base de données après les modifications en SQL      
+[Data.sql](Data.sql) représente la base de données après les modifications      
 
 
 Le MDP (Modèle Physique de Données) : 
@@ -502,7 +502,7 @@ INNER JOIN typearme ON arme.idTypeArme = typearme.idTypearme
 WHERE typearme.estDistance = False;
 ```
 
-#### Gestion CRUD
+#### Gestion CRUD (gestion des tables et des données)
 
 53. Créer la table attaque
 ``` sql
@@ -552,79 +552,126 @@ CREATE TABLE utilise
 );
 ```
 
-59. 
+59. Ajouter des lignes dans la table 'attaque'
 ``` sql
-SELECT * FROM ;
+INSERT INTO attaque (nom, baseDegat) VALUES ('attaque1', 5);
+INSERT INTO attaque (nom, baseDegat) VALUES ('attaque2', 10);
+INSERT INTO attaque (nom, baseDegat) VALUES ('attaque3', 15);
+INSERT INTO attaque (nom, baseDegat) VALUES ('attaque4', 20);
 ```
 
-60. 
+60. Ajouter des lignes dans la table 'utilise'
 ``` sql
-SELECT * FROM ;
+INSERT INTO utilise (idAttaque, idPersonnage, levelAttaque) VALUES (1,1,2), (2,1,2), (2,2,1), (4,3,2), (1,4,3), (4,5,3);
 ```
 
-61. 
+61. Modifier l'attaque de toutes les lignes pour que les dégats soient égaux à 10
 ``` sql
-SELECT * FROM ;
+UPDATE attaque
+SET baseDegat = 10;
 ```
 
-62. 
+62. Modifier les attaques avec les identifiants 2 et 3 pour qu'elles disposent de 50 dégats
 ``` sql
-SELECT * FROM ;
+UPDATE attaque
+SET baseDegat = 50
+WHERE idAttaque = 2 OR idAttaque = 3;
 ```
 
-63. 
+63. Supprimer l'attaque avec l'ID 4
 ``` sql
-SELECT * FROM ;
+DELETE FROM attaque
+WHERE idAttaque = 4;
+-- impossible, car y a des ligne dans la table 'utilise' avec cet id. Et donc faut d'abord le supprimer de cette table
 ```
 
-64. 
+64. Supprimer la table 'utilise', la recréer avec la propriété ON DELETE CASCADE et replacer toutes les lignes dedans. Pour faire ensuite la suppression dans 'attaque'
 ``` sql
-SELECT * FROM ;
+DROP TABLE utilise;
+CREATE TABLE utilise 
+(
+    idAttaque INT NOT NULL,
+    idPersonnage INT NOT NULL,
+    levelAttaque INT,
+    PRIMARY KEY (idAttaque, idPersonnage),
+    CONSTRAINT FK_ATTAQUE_UTILISE FOREIGN KEY (idAttaque) REFERENCES attaque(idAttaque) ON DELETE CASCADE,
+    CONSTRAINT FK_PERSONNAGE_UTILISE FOREIGN KEY (idPersonnage) REFERENCES personnage(idPersonnage) ON DELETE CASCADE
+);
+INSERT INTO utilise (idAttaque, idPersonnage, levelAttaque) VALUES (1,1,2), (2,1,2), (2,2,1), (4,3,2), (1,4,3), (4,5,3);
+DELETE FROM attaque
+WHERE idAttaque = 4;
 ```
 
-65. 
+65. Modifier la table personnage pour rajouter une date de naissance, définir ensuite une valeur pour chaque personnage
 ``` sql
-SELECT * FROM ;
+ALTER TABLE personnage
+ADD dateNaissance DATE;
+UPDATE personnage SET dateNaissance = '2000-01-01' WHERE idPersonnage=1;
+UPDATE personnage SET dateNaissance = '2001-02-01' WHERE idPersonnage=2;
+UPDATE personnage SET dateNaissance = '2002-03-01' WHERE idPersonnage=3;
+UPDATE personnage SET dateNaissance = '2003-06-01' WHERE idPersonnage=4;
+UPDATE personnage SET dateNaissance = '2001-04-01' WHERE idPersonnage=5;
+UPDATE personnage SET dateNaissance = '2007-02-01' WHERE idPersonnage=6;
+UPDATE personnage SET dateNaissance = '2003-05-01' WHERE idPersonnage=7;
 ```
 
-66. 
+#### DATE
+
+66. Récupérer les personnages nés après 2002
 ``` sql
-SELECT * FROM ;
+SELECT *
+FROM personnage
+WHERE personnage.dateNaissance > '2002-01-01'
 ```
 
-67. 
+67. Récupérer l'année de naissance de tous les personnages
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom, YEAR(personnage.dateNaissance) as 'Année de naissance'
+FROM personnage;
 ```
 
-68. 
+68. Récupérer le jour de la semaine de naissance de tous les personnages
+
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom, DAYOFWEEK(personnage.dateNaissance) as 'Jour de naissance'
+FROM personnage;
+-- 1 : Dimanche / 2 : Lundi / 3 : Mardi / 4 : Mercredi / 5 : Jeudi / 6 : Vendredi / 7 : Samedi
 ```
 
-69. 
+69. Récupérer l'age de chaque personnage
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom, DATEDIFF(NOW(), personnage.dateNaissance)/365 as 'Age'
+FROM personnage;
 ```
 
-70. 
+70. Requête précédente mais avec un résultat arrondi (age exact)
+
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom, CONVERT(DATEDIFF(NOW(), personnage.dateNaissance)/365,INT) as 'Age'
+FROM personnage
+ORDER BY Age DESC;
 ```
 
-71. 
+71. Calculer la moyenne d'age des personnages
 ``` sql
-SELECT * FROM ;
+SELECT AVG(CONVERT(DATEDIFF(NOW(), personnage.dateNaissance)/365,INT)) as 'Moyenne dage'
+FROM personnage;
 ```
 
-72. 
+72. Calculer la moyenne d'age des personnages avec une deuxième méthode
+
 ``` sql
-SELECT * FROM ;
+SELECT AVG(TableDynamique1.age) AS 'Moyenne dage'
+FROM
+(SELECT personnage.nom, DATEDIFF(NOW(), personnage.dateNaissance)/365 AS age
+FROM personnage) TableDynamique1
 ```
 
-73. 
+73. Récupérer les personnages ayant plus de 15ans
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom, CONVERT(DATEDIFF(NOW(), personnage.dateNaissance)/365,INT) AS age
+FROM personnage
+WHERE CONVERT(DATEDIFF(NOW(), personnage.dateNaissance)/365,INT) > 15;
 ```
 
 74. 
