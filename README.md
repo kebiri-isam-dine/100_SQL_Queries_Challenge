@@ -18,16 +18,12 @@
 
 
 ## About The Project
-CHALLENGE : 100 requêtes SQL sur un Dataset de jeu, on utilisera ``XAMPP v3.3.0`` serveur Web, une distribution Apache open source contenant ``MySQL`` et ``PHP``
-
-
-
-
+CHALLENGE : 100 requêtes SQL sur un Dataset de jeu, on utilisera le serveur Web ``XAMPP v3.3.0``, une distribution Apache open source contenant ``MySQL`` et ``PHP``
 
 
 
 ## Dataset
-Base de données d'un jeu rpg qui contient des personnages et des armes, lancer le script [DataBrutes.sql](/DataBrutes.sql) pour importer les tables dans ``phpMyAdmin``
+On appliquera les requêtes sur une base de données d'un jeu rpg qui contient des personnages et des armes, lancer le script [DataBrutes.sql](/DataBrutes.sql) pour importer les tables dans ``phpMyAdmin``
 
 
 [DataAfter.sql](/DataAfter.sql) représente la base de données après les modifications
@@ -264,7 +260,7 @@ INNER JOIN arme ON arme.idArme = dispose.idArme
 WHERE personnage.level = 10
 ```
 
-31. memes requete que 30. mais triées par idPersonnage
+31. même requête que 30. mais triées par idPersonnage
 ``` sql
 SELECT personnage.idPersonnage, personnage.nom AS "Nom personnage", arme.nom AS "Nom arme", level
 FROM personnage
@@ -293,12 +289,12 @@ INNER JOIN typearme ON arme.idTypeArme = arme.idTypeArme
 WHERE typearme.libelle LIKE "A%";
 ```
 
-34. Récupérer tous les types d'armes, et afficher les armes pour chaque type (meme les types qui n'ont pas d'arme)
+34. Récupérer tous les types d'armes, et afficher les armes pour chaque type (même les types qui n'ont pas d'arme)
 ``` sql
 SELECT arme.nom, typearme.libelle AS "type"
 FROM arme
 RIGHT JOIN typearme ON arme.idTypeArme = typearme.idTypeArme;
--- jointure externe poir avoir toutes les types d'armes meme les types d'armes NULL
+-- jointure externe poir avoir toutes les types d'armes même les types d'armes NULL
 ```
 
 35. Récupérer toutes les armes et afficher le personnage qui les utilis, ordonnées par levelMin
@@ -405,10 +401,10 @@ GROUP BY typearme.libelle
 HAVING COUNT(arme.idArme) <= 1
 ORDER BY COUNT(*) DESC;
 -- jointure externe TRES IMPORTANTE
--- on peut avoir WHERE et HAVING dans une seule requete
+-- on peut avoir WHERE et HAVING dans une seule requête
 ```
 
-#### Requetes imbriquées (Sous-Requetes) : ALL, IN
+#### requêtes imbriquées (Sous-requêtes) : ALL, IN
 
 45. Récupérer les armes ayant un nombre de dégats > à la moyenne du nombre de dégats de toutes les armes
 ``` sql
@@ -497,7 +493,7 @@ WHERE arme.idTypeArme IN(
     WHERE typearme.estDistance = False) 
 ```
 
-52. Requete précédente avec jointure
+52. requête précédente avec jointure
 ``` sql
 SELECT * 
 FROM arme
@@ -720,7 +716,7 @@ INNER JOIN classe ON classe.idClasse = personnage.idClasse
 WHERE personnage.nom = 'wawaf';
 ```
 
-78. Meme requête que la précédente mais en structurant le résultat et en affichant que : 'Nom personnage', 'Classe', 'Arme utilise', 'type arme utilise', 'Attaque', 'Arme dispose', 'Arme dispose type'
+78. Même requête que la précédente mais en structurant le résultat et en affichant que : 'Nom personnage', 'Classe', 'Arme utilise', 'type arme utilise', 'Attaque', 'Arme dispose', 'Arme dispose type'
 
 ``` sql
 SELECT personnage.nom AS 'Nom personnage', classe.nom AS 'Classe', a1.nom AS 'Arme dispose', t1.libelle AS 'type arme dispose', attaque.nom AS 'Attaque', a2.nom AS 'Arme utilise', t2.libelle AS 'type arme utilise'
