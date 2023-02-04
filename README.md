@@ -67,14 +67,14 @@ FROM personnage;
 4. Afficher le nom et le level de tous les personnages en modifiant les titres des colonnes en "Pseudo" et "Niveau"
 
 ``` sql
-SELECT nom as Pseudo, level as Niveau
+SELECT nom AS Pseudo, level AS Niveau
 FROM personnage;
 ```
 
 5. Afficher le types des armes en renommant le type en "Types d'armes de jeu"
 
 ``` sql
-SELECT libelle as "Types d'armes de jeu"
+SELECT libelle AS "Types d'armes de jeu"
 FROM typearme;
 ```
 
@@ -82,37 +82,37 @@ FROM typearme;
 
 6. Récupérer le nombre d'armes existantes
 ``` sql
-SELECT count(*) as "Nombre d'armes"
+SELECT count(*) AS "Nombre d'armes"
 FROM arme;
 ```
 
 7. Afficher le nombre de personnages du jeu
 ``` sql
-SELECT count(*) as "Nombre de personnages"
+SELECT count(*) AS "Nombre de personnages"
 FROM personnage;
 ```
 
 8. Récupérer la moyenne des niveaux des personnages du jeu
 ``` sql
-SELECT AVG(LEVEL) as "Moyenne des niveaux des personnages"
+SELECT AVG(LEVEL) AS "Moyenne des niveaux des personnages"
 FROM personnage;
 ```
 
 9. Récupérer la somme des points de force, d'agilité et d'intelligence de toutes les classes
 
 ``` sql
-SELECT SUM(baseAgi) as "Moyenne d'agilité", SUM(baseIntel) as "Moyenne d'intelligence", SUM(baseForce) as "Moyenne de force"
+SELECT SUM(baseAgi) AS "Moyenne d'agilité", SUM(baseIntel) AS "Moyenne d'intelligence", SUM(baseForce) AS "Moyenne de force"
 FROM classe;
 ```
 10. Récupérer le level min et max des armes de jeu
 ``` sql
-SELECT MIN(levelMin) as "level min", MAX(levelMin) as "level max"
+SELECT MIN(levelMin) AS "level min", MAX(levelMin) AS "level max"
 FROM arme;
 ```
 
 11. Additionner le nombre de points de caractéristique de toutes les classes
 ``` sql
-SELECT nom, baseForce + baseIntel + baseAgi as "nombre de points de caractéristique"
+SELECT nom, baseForce + baseIntel + baseAgi AS "nombre de points de caractéristique"
 FROM classe;
 ```
 
@@ -120,13 +120,13 @@ FROM classe;
 
 12. Afficher le nom et le surnom des personnages dans une seule colonne (concaténation)
 ``` sql
-SELECT CONCAT(nom, " ",surnom) as "Personnage"
+SELECT CONCAT(nom, " ",surnom) AS "Personnage"
 FROM personnage;
 ```
 
 13. Afficher les noms des classes avec les points de caractéristique dans une seule colonne
 ``` sql
-SELECT CONCAT(nom, ": ","A = ",baseAgi,", I = ",baseIntel,", F = ",baseForce) as "Classe"
+SELECT CONCAT(nom, ": ","A = ",baseAgi,", I = ",baseIntel,", F = ",baseForce) AS "Classe"
 FROM classe;
 ```
 
@@ -138,7 +138,7 @@ FROM personnage;
 
 15. Afficher les 5 premières lettres des classes concaténées au 20 premières lettres de la description
 ``` sql
-SELECT CONCAT(SUBSTRING(nom,1,5)," : ", SUBSTRING(description,1,20)) as "Description des classe"
+SELECT CONCAT(SUBSTRING(nom,1,5)," : ", SUBSTRING(description,1,20)) AS "Description des classe"
 FROM classe;
 ```
 
@@ -208,14 +208,14 @@ INNER JOIN typearme ON arme.idTypeArme = typearme.idTypeArme;
 
 24. Récupérer le nom des personnages et le nom de leur classe
 ``` sql
-SELECT personnage.nom as "Nom personnage", classe.nom as "Nom classe"
+SELECT personnage.nom AS "Nom personnage", classe.nom AS "Nom classe"
 FROM personnage
 INNER JOIN classe ON personnage.idClasse = classe.idClasse;
 ```
 
 25. Récupérer l'arme qui est utilisée par chaque personnage
 ``` sql
-SELECT personnage.nom as "Nom personnage", arme.nom as "Nom arme"
+SELECT personnage.nom AS "Nom personnage", arme.nom AS "Nom arme"
 FROM personnage
 INNER JOIN arme ON personnage.idArmeUtilise = arme.idArme;
 ```
@@ -223,7 +223,7 @@ INNER JOIN arme ON personnage.idArmeUtilise = arme.idArme;
 26. Récupérer l'arme qui est utilisée par chaque personnage et le type d'arme
 
 ``` sql
-SELECT personnage.nom as "Nom personnage", arme.nom as "Nom arme", typearme.libelle as "Type d'arme"
+SELECT personnage.nom AS "Nom personnage", arme.nom AS "Nom arme", typearme.libelle AS "Type d'arme"
 FROM personnage
 INNER JOIN arme ON personnage.idArmeUtilise = arme.idArme
 INNER JOIN typearme ON arme.idTypeArme = typearme.idTypeArme;
@@ -231,24 +231,24 @@ INNER JOIN typearme ON arme.idTypeArme = typearme.idTypeArme;
 
 27. Récupérer toutes les armes de tous les personnages
 ``` sql
-SELECT personnage.nom as "Nom personnage", arme.nom as "Nom arme"
-from personnage
+SELECT personnage.nom AS "Nom personnage", arme.nom AS "Nom arme"
+FROM personnage
 INNER JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
 INNER JOIN arme ON arme.idArme = dispose.idArme;
 ```
 
 28. Récupérer toutes les armes qui ne sont pas à distance
 ``` sql
-SELECT arme.nom as "Nom arme", levelMin, degat, typearme.libelle as "Type"
-from arme
+SELECT arme.nom AS "Nom arme", levelMin, degat, typearme.libelle AS "Type"
+FROM arme
 INNER JOIN typearme ON arme.idTypeArme = typearme.idTypeArme
 WHERE estDistance = False;
 ```
 
 29. Récupérer l'arme utilisée par chaque guerrier
 ``` sql
-SELECT personnage.nom as "Nom personnage", arme.nom as "Nom arme", typearme.libelle as "Type d'arme" 
-from personnage
+SELECT personnage.nom AS "Nom personnage", arme.nom AS "Nom arme", typearme.libelle AS "Type d'arme" 
+FROM personnage
 INNER JOIN arme ON arme.idArme = personnage.idArmeUtilise
 INNER JOIN typearme ON typearme.idTypeArme = arme.idTypeArme
 INNER JOIN classe ON personnage.idClasse = classe.idClasse
@@ -257,8 +257,8 @@ WHERE classe.nom = 'Guerrier'
 
 30. Récupérer toutes les armes dont disposent les joueurs ayant le level 10
 ``` sql
-SELECT personnage.nom as "Nom personnage", arme.nom as "Nom arme", level
-from personnage
+SELECT personnage.nom AS "Nom personnage", arme.nom AS "Nom arme", level
+FROM personnage
 INNER JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
 INNER JOIN arme ON arme.idArme = dispose.idArme
 WHERE personnage.level = 10
@@ -266,8 +266,8 @@ WHERE personnage.level = 10
 
 31. memes requete que 30. mais triées par idPersonnage
 ``` sql
-SELECT personnage.idPersonnage, personnage.nom as "Nom personnage", arme.nom as "Nom arme", level
-from personnage
+SELECT personnage.idPersonnage, personnage.nom AS "Nom personnage", arme.nom AS "Nom arme", level
+FROM personnage
 INNER JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
 INNER JOIN arme ON arme.idArme = dispose.idArme
 WHERE personnage.level = 10
@@ -277,7 +277,7 @@ ORDER BY personnage.idPersonnage;
 
 32. Récupérer la moyenne des dégats des armes à distance
 ``` sql
-SELECT AVG(degat) as "la moyenne des dégats des armes à distance"
+SELECT AVG(degat) AS "la moyenne des dégats des armes à distance"
 FROM arme
 INNER JOIN typearme ON arme.idTypeArme = arme.idTypeArme
 WHERE typearme.estDistance = True;
@@ -285,8 +285,8 @@ WHERE typearme.estDistance = True;
 
 33. Récupérer tous les personnages disposant d'une arme d'un type commençant par "a"
 ``` sql
-SELECT DISTINCT(personnage.nom) as "Nom personnage"
-from personnage
+SELECT DISTINCT(personnage.nom) AS "Nom personnage"
+FROM personnage
 INNER JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
 INNER JOIN arme ON arme.idArme = dispose.idArme
 INNER JOIN typearme ON arme.idTypeArme = arme.idTypeArme
@@ -295,7 +295,7 @@ WHERE typearme.libelle LIKE "A%";
 
 34. Récupérer tous les types d'armes, et afficher les armes pour chaque type (meme les types qui n'ont pas d'arme)
 ``` sql
-SELECT arme.nom, typearme.libelle as "type"
+SELECT arme.nom, typearme.libelle AS "type"
 FROM arme
 RIGHT JOIN typearme ON arme.idTypeArme = typearme.idTypeArme;
 -- jointure externe poir avoir toutes les types d'armes meme les types d'armes NULL
@@ -303,7 +303,7 @@ RIGHT JOIN typearme ON arme.idTypeArme = typearme.idTypeArme;
 
 35. Récupérer toutes les armes et afficher le personnage qui les utilis, ordonnées par levelMin
 ``` sql
-SELECT arme.nom, personnage.nom as "Nom personnage", arme.levelMin
+SELECT arme.nom, personnage.nom AS "Nom personnage", arme.levelMin
 FROM arme
 Left JOIN personnage ON arme.idArme = personnage.idArmeUtilise
 ORDER BY levelMin;
@@ -434,7 +434,7 @@ ORDER BY personnage.level DESC;
 
 ``` sql
 SELECT personnage.nom, personnage.level
-from personnage
+FROM personnage
 WHERE personnage.level >
  (SELECT AVG(personnage.level)
     FROM personnage
@@ -447,14 +447,14 @@ ORDER BY personnage.level DESC;
 48. Pour les armes à distance, récupérer le nombre max d'occurence du type arme
 
 ``` sql
-SELECT MAX(NombreDarmes) as "le nombre max d'occurence du type arme"
+SELECT MAX(NombreDarmes) AS "le nombre max d'occurence du type arme"
 FROM
 (SELECT typearme.libelle, COUNT(*) AS "NombreDarmes"
 FROM arme
 INNER JOIN typearme ON typearme.idTypeArme = arme.idTypeArme
 WHERE typearme.estDistance = True
 GROUP BY typearme.libelle) TableDynamique
--- TableDynamique : il est nécessaire de nommer la table dynamique qu'on vient de créer
+-- TableDynamique : il est nécessaire de nommer la table dynamique qu'ON vient de créer
 ```
 
 49. Récupérer les types d'armes ayant le nombre égale d'occurrence de la précédente reuquete
@@ -465,7 +465,7 @@ FROM typearme
 INNER JOIN arme ON typearme.idTypeArme = arme.idTypeArme
 GROUP BY typearme.libelle
 HAVING COUNT(*) = 
-(SELECT MAX(NombreDarmes) as "le nombre max d'occurence du type arme"
+(SELECT MAX(NombreDarmes) AS "le nombre max d'occurence du type arme"
 FROM
 (SELECT typearme.libelle, COUNT(*) AS "NombreDarmes"
 FROM arme
@@ -484,7 +484,7 @@ WHERE arme.degat > ALL(
     FROM arme
     RIGHT JOIN typearme ON arme.idTypeArme = typearme.idTypeArme
     WHERE typearme.libelle = 'Arc') 
--- quand on compare à un SRING, faut vraiment bien vérifier l'orthographe de ce STRING
+-- quand ON compare à un SRING, faut vraiment bien vérifier l'orthographe de ce STRING
 ```
 
 51. Récupérer les armes de corp à corp sans utiliser de jointure
@@ -629,35 +629,35 @@ WHERE personnage.dateNaissance > '2002-01-01'
 
 67. Récupérer l'année de naissance de tous les personnages
 ``` sql
-SELECT personnage.nom, YEAR(personnage.dateNaissance) as 'Année de naissance'
+SELECT personnage.nom, YEAR(personnage.dateNaissance) AS 'Année de naissance'
 FROM personnage;
 ```
 
 68. Récupérer le jour de la semaine de naissance de tous les personnages
 
 ``` sql
-SELECT personnage.nom, DAYOFWEEK(personnage.dateNaissance) as 'Jour de naissance'
+SELECT personnage.nom, DAYOFWEEK(personnage.dateNaissance) AS 'Jour de naissance'
 FROM personnage;
 -- 1 : Dimanche / 2 : Lundi / 3 : Mardi / 4 : Mercredi / 5 : Jeudi / 6 : Vendredi / 7 : Samedi
 ```
 
 69. Récupérer l'age de chaque personnage
 ``` sql
-SELECT personnage.nom, DATEDIFF(NOW(), personnage.dateNaissance)/365 as 'Age'
+SELECT personnage.nom, DATEDIFF(NOW(), personnage.dateNaissance)/365 AS 'Age'
 FROM personnage;
 ```
 
 70. Requête précédente mais avec un résultat arrondi (age exact)
 
 ``` sql
-SELECT personnage.nom, CONVERT(DATEDIFF(NOW(), personnage.dateNaissance)/365,INT) as 'Age'
+SELECT personnage.nom, CONVERT(DATEDIFF(NOW(), personnage.dateNaissance)/365,INT) AS 'Age'
 FROM personnage
 ORDER BY Age DESC;
 ```
 
 71. Calculer la moyenne d'age des personnages
 ``` sql
-SELECT AVG(CONVERT(DATEDIFF(NOW(), personnage.dateNaissance)/365,INT)) as 'Moyenne dage'
+SELECT AVG(CONVERT(DATEDIFF(NOW(), personnage.dateNaissance)/365,INT)) AS 'Moyenne dage'
 FROM personnage;
 ```
 
@@ -682,28 +682,28 @@ WHERE CONVERT(DATEDIFF(NOW(), personnage.dateNaissance)/365,INT) > 15;
 74. Récupérer les attaques du personnage 'headhunter'
 
 ``` sql
-SELECT personnage.nom as "Personnage", attaque.nom as "Attaque"
+SELECT personnage.nom AS "Personnage", attaque.nom AS "Attaque"
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 WHERE personnage.nom = 'headhunter';
 ```
 
 75. Récupérer les attaques de tous les personnages (ordonnée par personnage)
 ``` sql
-SELECT personnage.nom as "Personnage", attaque.nom as "Attaque"
+SELECT personnage.nom AS "Personnage", attaque.nom AS "Attaque"
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 ORDER BY personnage.idPersonnage;
 ```
 
 76. Pour chaque personnage utilisant l'attaque 1, afficher le 'level' utilisé
 ``` sql
-SELECT personnage.nom as "Personnage", attaque.nom as "Attaque", utilise.levelAttaque, personnage.level
+SELECT personnage.nom AS "Personnage", attaque.nom AS "Attaque", utilise.levelAttaque, personnage.level
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 WHERE attaque.nom = 'attaque1';
 ```
 
@@ -711,28 +711,28 @@ WHERE attaque.nom = 'attaque1';
 ``` sql
 SELECT *
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
-INNER JOIN dispose on personnage.idPersonnage = dispose.idPersonnage
-INNER JOIN arme on arme.idArme = dispose.idArme
-INNER JOIN typearme on typearme.idTypeArme = arme.idTypeArme
-INNER JOIN classe on classe.idClasse = personnage.idClasse
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
+INNER JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
+INNER JOIN arme ON arme.idArme = dispose.idArme
+INNER JOIN typearme ON typearme.idTypeArme = arme.idTypeArme
+INNER JOIN classe ON classe.idClasse = personnage.idClasse
 WHERE personnage.nom = 'wawaf';
 ```
 
 78. Meme requête que la précédente mais en structurant le résultat et en affichant que : 'Nom personnage', 'Classe', 'Arme utilise', 'type arme utilise', 'Attaque', 'Arme dispose', 'Arme dispose type'
 
 ``` sql
-SELECT personnage.nom as 'Nom personnage', classe.nom as 'Classe', a1.nom as 'Arme dispose', t1.libelle as 'type arme dispose', attaque.nom as 'Attaque', a2.nom as 'Arme utilise', t2.libelle as 'type arme utilise'
+SELECT personnage.nom AS 'Nom personnage', classe.nom AS 'Classe', a1.nom AS 'Arme dispose', t1.libelle AS 'type arme dispose', attaque.nom AS 'Attaque', a2.nom AS 'Arme utilise', t2.libelle AS 'type arme utilise'
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
-INNER JOIN dispose on personnage.idPersonnage = dispose.idPersonnage
-INNER JOIN arme a1 on a1.idArme = dispose.idArme
-INNER JOIN arme a2 on a2.idArme = personnage.idArmeUtilise
-INNER JOIN typearme t1 on t1.idTypeArme = a1.idTypeArme
-INNER JOIN typearme t2 on t2.idTypeArme = a2.idTypeArme
-INNER JOIN classe on classe.idClasse = personnage.idClasse
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
+INNER JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
+INNER JOIN arme a1 ON a1.idArme = dispose.idArme
+INNER JOIN arme a2 ON a2.idArme = personnage.idArmeUtilise
+INNER JOIN typearme t1 ON t1.idTypeArme = a1.idTypeArme
+INNER JOIN typearme t2 ON t2.idTypeArme = a2.idTypeArme
+INNER JOIN classe ON classe.idClasse = personnage.idClasse
 WHERE personnage.nom = 'wawaf';
 -- IMPORTANT : certaines jointures peuvent donner l'impression qu'elles se répètent, mais elles sont essentielles
 ```
@@ -744,49 +744,49 @@ SELECT * FROM ;
 
 80. Le personnage avec la plus grande 'baseDegat'
 ``` sql
-SELECT personnage.nom as 'Personnage', MAX(attaque.baseDegat)
+SELECT personnage.nom AS 'Personnage', MAX(attaque.baseDegat)
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque;
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque;
 ```
 
 81. Les personnages avec au moins une 'baseDegat' > 20
 
 ``` sql
-SELECT personnage.nom as 'Personnage', attaque.baseDegat
+SELECT personnage.nom AS 'Personnage', attaque.baseDegat
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 WHERE attaque.baseDegat > 20;
 ```
 
 82. Récupérer tous les personnages et pour chacun d'eux, récupérer toutes les attaques 
 ``` sql
-SELECT personnage.idPersonnage, personnage.nom as 'Personnage', attaque.nom as 'Attaque'
+SELECT personnage.idPersonnage, personnage.nom AS 'Personnage', attaque.nom AS 'Attaque'
 FROM personnage
-LEFT JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-LEFT JOIN attaque on attaque.idAttaque = utilise.idAttaque;
+LEFT JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+LEFT JOIN attaque ON attaque.idAttaque = utilise.idAttaque;
 -- tous → faut faire attention au type de jointure
 ```
 
 83. Même requête que la précédente et n'afficher que les lignes 3 à 5
 
 ``` sql
-SELECT personnage.idPersonnage, personnage.nom as 'Personnage', attaque.nom as 'Attaque'
+SELECT personnage.idPersonnage, personnage.nom AS 'Personnage', attaque.nom AS 'Attaque'
 FROM personnage
-LEFT JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-LEFT JOIN attaque on attaque.idAttaque = utilise.idAttaque
+LEFT JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+LEFT JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 LIMIT 3 OFFSET 2;
 ```
 
 84. Afficher toutes les attaques des personnages utilisant une arme à distance
 ``` sql
-SELECT personnage.idPersonnage, personnage.nom as 'Personnage', arme.nom as 'Arme', attaque.nom as 'Attaque'
+SELECT personnage.idPersonnage, personnage.nom AS 'Personnage', arme.nom AS 'Arme', attaque.nom AS 'Attaque'
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
-INNER JOIN arme on personnage.idArmeUtilise = arme.idArme
-INNER JOIN typearme on arme.idTypeArme = typearme.idTypeArme
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
+INNER JOIN arme ON personnage.idArmeUtilise = arme.idArme
+INNER JOIN typearme ON arme.idTypeArme = typearme.idTypeArme
 WHERE typearme.estDistance = True;
 ```
 
@@ -794,59 +794,59 @@ WHERE typearme.estDistance = True;
 ``` sql
 SELECT MIN(utilise.levelAttaque) 
 FROM utilise
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 WHERE attaque.nom = 'attaque1';
 ```
 
 86. Récupérer le personnage utilisant l'attaque 1 avec le levelAttaque le plus haut
 ``` sql
 /* EXEMPLE DE REUQUETE FAUSSE:
-SELECT personnage.idPersonnage, personnage.nom as 'Personnage', MAX(utilise.levelAttaque) 
+SELECT personnage.idPersonnage, personnage.nom AS 'Personnage', MAX(utilise.levelAttaque) 
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 WHERE attaque.nom = 'attaque1';
 */
-SELECT personnage.idPersonnage, personnage.nom as 'Personnage', utilise.levelAttaque 
+SELECT personnage.idPersonnage, personnage.nom AS 'Personnage', utilise.levelAttaque 
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 WHERE attaque.nom = 'attaque1'
 HAVING utilise.levelAttaque > ALL
 (SELECT utilise.levelAttaque
  FROM utilise
- INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+ INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
  WHERE attaque.nom = 'attaque1'
  )
 ```
 
 87. Calculer le nombre de dégats que fait chaque personnage (degat * (0,5 * level du personnage))
 ``` sql
-SELECT personnage.idPersonnage, personnage.nom as 'Personnage', (arme.degat * 0.5 * personnage.level) as 'Dégat du perso' 
+SELECT personnage.idPersonnage, personnage.nom AS 'Personnage', (arme.degat * 0.5 * personnage.level) AS 'Dégat du perso' 
 FROM personnage
-INNER JOIN arme on personnage.idArmeUtilise = arme.idArme
+INNER JOIN arme ON personnage.idArmeUtilise = arme.idArme
 ORDER BY (arme.degat * 0.5 * personnage.level) DESC;
 ```
 
 88. En déduire l'arme utilisé pour avoir le plus grande nombre de dégats
 
 ``` sql
-SELECT arme.nom as 'Arme', Max(arme.degat * 0.5 * personnage.level) as 'Dégat' 
+SELECT arme.nom AS 'Arme', Max(arme.degat * 0.5 * personnage.level) AS 'Dégat' 
 FROM personnage
-INNER JOIN arme on personnage.idArmeUtilise = arme.idArme;
+INNER JOIN arme ON personnage.idArmeUtilise = arme.idArme;
 ```
 
 89. Récupérer le nombre de personnages faisant moins de dégat que 100
 ``` sql
-SELECT COUNT(personnage.nom) as 'Nombre de personnages faisant moins de dégat que 100' 
+SELECT COUNT(personnage.nom) AS 'Nombre de personnages faisant moins de dégat que 100' 
 FROM personnage
-INNER JOIN arme on personnage.idArmeUtilise = arme.idArme
+INNER JOIN arme ON personnage.idArmeUtilise = arme.idArme
 WHERE (arme.degat * 0.5 * personnage.level) < 100;
 
 -- Deuxième façon :
-SELECT personnage.idPersonnage, personnage.nom as 'Personnage', (arme.degat * 0.5 * personnage.level) as 'Dégat' 
+SELECT personnage.idPersonnage, personnage.nom AS 'Personnage', (arme.degat * 0.5 * personnage.level) AS 'Dégat' 
 FROM personnage
-INNER JOIN arme on personnage.idArmeUtilise = arme.idArme
+INNER JOIN arme ON personnage.idArmeUtilise = arme.idArme
 HAVING Dégat < 100
 ORDER BY (arme.degat * 0.5 * personnage.level) DESC;
 ```
@@ -859,25 +859,25 @@ FROM utilise;
 
 91. Afficher le nombre d'attaque par personnage
 ``` sql
-SELECT personnage.idPersonnage, personnage.nom as 'Personnage', COUNT(attaque.nom) as 'Nombre dattaque'
+SELECT personnage.idPersonnage, personnage.nom AS 'Personnage', COUNT(attaque.nom) AS 'Nombre dattaque'
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 GROUP BY personnage.nom;
 ```
 
 92. Afficher le (les) personnage(s) ayant le plus d'attaques
 ``` sql
-SELECT personnage.idPersonnage, personnage.nom as 'Personnage', COUNT(*) as 'Nombre dattaque'
+SELECT personnage.idPersonnage, personnage.nom AS 'Personnage', COUNT(*) AS 'Nombre dattaque'
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 GROUP BY personnage.nom
 HAVING COUNT(*) >= ALL
 ( SELECT COUNT(*) 
 FROM personnage
-INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 GROUP BY personnage.nom
 )
 -- la plus difficile pour moi
@@ -886,24 +886,24 @@ GROUP BY personnage.nom
 93. Afficher le (les) personnage(s) ayant le moins d'attaques
 
 ``` sql
-SELECT personnage.idPersonnage, personnage.nom as 'Personnage', COUNT(attaque.idAttaque) as 'Nombre dattaque'
+SELECT personnage.idPersonnage, personnage.nom AS 'Personnage', COUNT(attaque.idAttaque) AS 'Nombre dattaque'
 FROM personnage
-LEFT JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-LEFT JOIN attaque on attaque.idAttaque = utilise.idAttaque
+LEFT JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+LEFT JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 GROUP BY personnage.nom
 HAVING COUNT(attaque.idAttaque) <= ALL
 ( SELECT COUNT(attaque.idAttaque) 
 FROM personnage
-LEFT JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-LEFT JOIN attaque on attaque.idAttaque = utilise.idAttaque
+LEFT JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+LEFT JOIN attaque ON attaque.idAttaque = utilise.idAttaque
 GROUP BY personnage.nom
 )
--- on remarque deux choses : l'importance du type de jointure et sur quoi on applique le COUNT(), pour avoir les bons résultats
+-- on remarque deux choses : l'importance du type de jointure et sur quoi ON applique le COUNT(), pour avoir les bons résultats
 ```
 
 94. Afficher les personnage nés avant 2003
 ``` sql
-SELECT personnage.idPersonnage, personnage.nom as 'Personnage', personnage.dateNaissance
+SELECT personnage.idPersonnage, personnage.nom AS 'Personnage', personnage.dateNaissance
 FROM personnage
 WHERE YEAR(dateNaissance) < '2003';
 ```
@@ -955,12 +955,12 @@ WHERE attaque.nom LIKE 'attaque%';
 ``` sql
 SELECT *
 FROM personnage
-LEFT JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
-LEFT JOIN attaque on attaque.idAttaque = utilise.idAttaque
-LEFT JOIN dispose on personnage.idPersonnage = dispose.idPersonnage
-LEFT JOIN arme on arme.idArme = dispose.idArme
-LEFT JOIN typearme on typearme.idTypeArme = arme.idTypeArme
-LEFT JOIN classe on classe.idClasse = personnage.idClasse;
+LEFT JOIN utilise ON personnage.idPersonnage = utilise.idPersonnage
+LEFT JOIN attaque ON attaque.idAttaque = utilise.idAttaque
+LEFT JOIN dispose ON personnage.idPersonnage = dispose.idPersonnage
+LEFT JOIN arme ON arme.idArme = dispose.idArme
+LEFT JOIN typearme ON typearme.idTypeArme = arme.idTypeArme
+LEFT JOIN classe ON classe.idClasse = personnage.idClasse;
 -- Attention au type de jointure
 ```
 
@@ -970,7 +970,7 @@ LEFT JOIN classe on classe.idClasse = personnage.idClasse;
 DELETE FROM personnage
 WHERE YEAR(personnage.dateNaissance) < '2003';
 -- pas faisable, car les personnages sont présent dans autres tables (dispose) et l'option de supprimer (ON DELETE) dans cette table est 'RESTRICT' et non pas 'CASCADE'
--- et donc on doit supprimer la contrainte 'FK_PERSONNAGE' des clés étrangères et là rajouter après
+-- et donc ON doit supprimer la contrainte 'FK_PERSONNAGE' des clés étrangères et là rajouter après
 ALTER TABLE dispose
 DROP FOREIGN KEY FK_PERSONNAGE;
 --
