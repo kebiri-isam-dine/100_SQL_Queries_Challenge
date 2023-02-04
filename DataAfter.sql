@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le :  sam. 15 juin 2019 à 10:25
--- Version du serveur :  10.1.33-MariaDB
--- Version de PHP :  7.2.6
+-- Généré le : sam. 04 fév. 2023 à 14:26
+-- Version du serveur : 10.4.27-MariaDB
+-- Version de PHP : 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -19,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données :  `rpg`
+-- Base de données : `rpg`
 --
 
 -- --------------------------------------------------------
@@ -34,7 +33,7 @@ CREATE TABLE `arme` (
   `levelMin` int(11) NOT NULL,
   `degat` int(11) NOT NULL,
   `idTypeArme` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Déchargement des données de la table `arme`
@@ -55,6 +54,30 @@ INSERT INTO `arme` (`idArme`, `nom`, `levelMin`, `degat`, `idTypeArme`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `attaque`
+--
+
+CREATE TABLE `attaque` (
+  `idAttaque` int(11) NOT NULL,
+  `nom` varchar(60) DEFAULT NULL,
+  `baseDegat` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `attaque`
+--
+
+INSERT INTO `attaque` (`idAttaque`, `nom`, `baseDegat`) VALUES
+(1, 'attaque1', 10),
+(2, 'attaque2', 50),
+(3, 'attaque3', 50),
+(5, 'Coup de pied', 40),
+(6, 'Coup de poing', 35),
+(7, 'Balayette', 5);
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `classe`
 --
 
@@ -65,7 +88,7 @@ CREATE TABLE `classe` (
   `baseAgi` int(11) NOT NULL,
   `baseIntel` int(11) NOT NULL,
   `description` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Déchargement des données de la table `classe`
@@ -85,27 +108,15 @@ INSERT INTO `classe` (`idClasse`, `nom`, `baseForce`, `baseAgi`, `baseIntel`, `d
 CREATE TABLE `dispose` (
   `idPersonnage` int(11) NOT NULL,
   `idArme` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Déchargement des données de la table `dispose`
 --
 
 INSERT INTO `dispose` (`idPersonnage`, `idArme`) VALUES
-(1, 1),
-(1, 2),
-(1, 3),
-(1, 4),
-(1, 9),
-(2, 1),
-(2, 2),
-(2, 3),
-(3, 2),
-(3, 3),
-(3, 7),
 (4, 4),
 (4, 5),
-(5, 7),
 (6, 4),
 (6, 8),
 (7, 9),
@@ -123,21 +134,18 @@ CREATE TABLE `personnage` (
   `surnom` varchar(60) DEFAULT NULL,
   `level` int(11) NOT NULL,
   `idArmeUtilise` int(11) NOT NULL,
-  `idClasse` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `idClasse` int(11) NOT NULL,
+  `dateNaissance` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Déchargement des données de la table `personnage`
 --
 
-INSERT INTO `personnage` (`idPersonnage`, `nom`, `surnom`, `level`, `idArmeUtilise`, `idClasse`) VALUES
-(1, 'wawaf', 'BestWarrior', 10, 7, 1),
-(2, 'leWar', 'ptitWar', 8, 3, 1),
-(3, 'guerrierDu09', 'baba', 10, 2, 1),
-(4, 'headhunter', 'HH', 10, 6, 2),
-(5, 'larcher', NULL, 5, 5, 2),
-(6, 'lartificier', 'lartificier', 7, 8, 2),
-(7, 'roguiBalbao', 'elBoxor', 10, 10, 3);
+INSERT INTO `personnage` (`idPersonnage`, `nom`, `surnom`, `level`, `idArmeUtilise`, `idClasse`, `dateNaissance`) VALUES
+(4, 'headhunter', 'HH', 10, 6, 2, '2003-06-01'),
+(6, 'lartificier', 'lartificier', 7, 8, 2, '2007-02-01'),
+(7, 'roguiBalbao', 'elBoxor', 10, 10, 3, '2003-05-01');
 
 -- --------------------------------------------------------
 
@@ -149,7 +157,7 @@ CREATE TABLE `typearme` (
   `idTypeArme` int(11) NOT NULL,
   `libelle` varchar(60) NOT NULL,
   `estDistance` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Déchargement des données de la table `typearme`
@@ -163,6 +171,25 @@ INSERT INTO `typearme` (`idTypeArme`, `libelle`, `estDistance`) VALUES
 (5, 'Masse', 0),
 (6, 'Dague', 0);
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `utilise`
+--
+
+CREATE TABLE `utilise` (
+  `idAttaque` int(11) NOT NULL,
+  `idPersonnage` int(11) NOT NULL,
+  `levelAttaque` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `utilise`
+--
+
+INSERT INTO `utilise` (`idAttaque`, `idPersonnage`, `levelAttaque`) VALUES
+(1, 4, 3);
+
 --
 -- Index pour les tables déchargées
 --
@@ -173,6 +200,12 @@ INSERT INTO `typearme` (`idTypeArme`, `libelle`, `estDistance`) VALUES
 ALTER TABLE `arme`
   ADD PRIMARY KEY (`idArme`),
   ADD KEY `FK_TYPE_ARME` (`idTypeArme`);
+
+--
+-- Index pour la table `attaque`
+--
+ALTER TABLE `attaque`
+  ADD PRIMARY KEY (`idAttaque`);
 
 --
 -- Index pour la table `classe`
@@ -202,6 +235,13 @@ ALTER TABLE `typearme`
   ADD PRIMARY KEY (`idTypeArme`);
 
 --
+-- Index pour la table `utilise`
+--
+ALTER TABLE `utilise`
+  ADD PRIMARY KEY (`idAttaque`,`idPersonnage`),
+  ADD KEY `FK_PERSONNAGE_UTILISE` (`idPersonnage`);
+
+--
 -- AUTO_INCREMENT pour les tables déchargées
 --
 
@@ -210,6 +250,12 @@ ALTER TABLE `typearme`
 --
 ALTER TABLE `arme`
   MODIFY `idArme` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT pour la table `attaque`
+--
+ALTER TABLE `attaque`
+  MODIFY `idAttaque` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT pour la table `classe`
@@ -244,7 +290,7 @@ ALTER TABLE `arme`
 --
 ALTER TABLE `dispose`
   ADD CONSTRAINT `FK_ARME` FOREIGN KEY (`idArme`) REFERENCES `arme` (`idArme`),
-  ADD CONSTRAINT `FK_PERSONNAGE` FOREIGN KEY (`idPersonnage`) REFERENCES `personnage` (`idPersonnage`);
+  ADD CONSTRAINT `FK_PERSONNAGE` FOREIGN KEY (`idPersonnage`) REFERENCES `personnage` (`idPersonnage`) ON DELETE CASCADE;
 
 --
 -- Contraintes pour la table `personnage`
@@ -252,6 +298,13 @@ ALTER TABLE `dispose`
 ALTER TABLE `personnage`
   ADD CONSTRAINT `FK_ARME_UTILISE` FOREIGN KEY (`idArmeUtilise`) REFERENCES `arme` (`idArme`),
   ADD CONSTRAINT `FK_CLASSE` FOREIGN KEY (`idClasse`) REFERENCES `classe` (`idClasse`);
+
+--
+-- Contraintes pour la table `utilise`
+--
+ALTER TABLE `utilise`
+  ADD CONSTRAINT `FK_ATTAQUE_UTILISE` FOREIGN KEY (`idAttaque`) REFERENCES `attaque` (`idAttaque`) ON DELETE CASCADE,
+  ADD CONSTRAINT `FK_PERSONNAGE_UTILISE` FOREIGN KEY (`idPersonnage`) REFERENCES `personnage` (`idPersonnage`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

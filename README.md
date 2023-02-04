@@ -30,7 +30,7 @@ CHALLENGE : 100 requêtes SQL sur un Dataset de jeu, on utilisera ``XAMPP v3.3.0
 Base de données d'un jeu rpg qui contient des personnages et des armes, lancer le script [DataBrutes.sql](/DataBrutes.sql) pour importer les tables dans ``phpMyAdmin``
 
 
-[Data.sql](Data.sql) représente la base de données après les modifications      
+[DataAfter.sql](/DataAfter.sql) représente la base de données après les modifications
 
 
 Le MDP (Modèle Physique de Données) : 
@@ -677,142 +677,314 @@ FROM personnage
 WHERE CONVERT(DATEDIFF(NOW(), personnage.dateNaissance)/365,INT) > 15;
 ```
 
-74. 
+#### GENERALES
+
+74. Récupérer les attaques du personnage 'headhunter'
+
+``` sql
+SELECT personnage.nom as "Personnage", attaque.nom as "Attaque"
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+WHERE personnage.nom = 'headhunter';
+```
+
+75. Récupérer les attaques de tous les personnages (ordonnée par personnage)
+``` sql
+SELECT personnage.nom as "Personnage", attaque.nom as "Attaque"
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+ORDER BY personnage.idPersonnage;
+```
+
+76. Pour chaque personnage utilisant l'attaque 1, afficher le 'level' utilisé
+``` sql
+SELECT personnage.nom as "Personnage", attaque.nom as "Attaque", utilise.levelAttaque, personnage.level
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+WHERE attaque.nom = 'attaque1';
+```
+
+77. Récupérer toutes les informations possibles du personnage avec le nom 'wawaf' 
+``` sql
+SELECT *
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN dispose on personnage.idPersonnage = dispose.idPersonnage
+INNER JOIN arme on arme.idArme = dispose.idArme
+INNER JOIN typearme on typearme.idTypeArme = arme.idTypeArme
+INNER JOIN classe on classe.idClasse = personnage.idClasse
+WHERE personnage.nom = 'wawaf';
+```
+
+78. Meme requête que la précédente mais en structurant le résultat et en affichant que : 'Nom personnage', 'Classe', 'Arme utilise', 'type arme utilise', 'Attaque', 'Arme dispose', 'Arme dispose type'
+
+``` sql
+SELECT personnage.nom as 'Nom personnage', classe.nom as 'Classe', a1.nom as 'Arme dispose', t1.libelle as 'type arme dispose', attaque.nom as 'Attaque', a2.nom as 'Arme utilise', t2.libelle as 'type arme utilise'
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN dispose on personnage.idPersonnage = dispose.idPersonnage
+INNER JOIN arme a1 on a1.idArme = dispose.idArme
+INNER JOIN arme a2 on a2.idArme = personnage.idArmeUtilise
+INNER JOIN typearme t1 on t1.idTypeArme = a1.idTypeArme
+INNER JOIN typearme t2 on t2.idTypeArme = a2.idTypeArme
+INNER JOIN classe on classe.idClasse = personnage.idClasse
+WHERE personnage.nom = 'wawaf';
+-- IMPORTANT : certaines jointures peuvent donner l'impression qu'elles se répètent, mais elles sont essentielles
+```
+
+79. Faire la moyenne des attaques de tous les jours
 ``` sql
 SELECT * FROM ;
 ```
 
-75. 
+80. Le personnage avec la plus grande 'baseDegat'
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom as 'Personnage', MAX(attaque.baseDegat)
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque;
 ```
 
-76. 
+81. Les personnages avec au moins une 'baseDegat' > 20
+
 ``` sql
-SELECT * FROM ;
+SELECT personnage.nom as 'Personnage', attaque.baseDegat
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+WHERE attaque.baseDegat > 20;
 ```
 
-77. 
+82. Récupérer tous les personnages et pour chacun d'eux, récupérer toutes les attaques 
 ``` sql
-SELECT * FROM ;
+SELECT personnage.idPersonnage, personnage.nom as 'Personnage', attaque.nom as 'Attaque'
+FROM personnage
+LEFT JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+LEFT JOIN attaque on attaque.idAttaque = utilise.idAttaque;
+-- tous → faut faire attention au type de jointure
 ```
 
-78. 
+83. Même requête que la précédente et n'afficher que les lignes 3 à 5
+
 ``` sql
-SELECT * FROM ;
+SELECT personnage.idPersonnage, personnage.nom as 'Personnage', attaque.nom as 'Attaque'
+FROM personnage
+LEFT JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+LEFT JOIN attaque on attaque.idAttaque = utilise.idAttaque
+LIMIT 3 OFFSET 2;
 ```
 
-79. 
+84. Afficher toutes les attaques des personnages utilisant une arme à distance
 ``` sql
-SELECT * FROM ;
+SELECT personnage.idPersonnage, personnage.nom as 'Personnage', arme.nom as 'Arme', attaque.nom as 'Attaque'
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+INNER JOIN arme on personnage.idArmeUtilise = arme.idArme
+INNER JOIN typearme on arme.idTypeArme = typearme.idTypeArme
+WHERE typearme.estDistance = True;
 ```
 
-80. 
+85. Récupérer le plus bas levelAttaque d'utilisation de l'attaque 1
 ``` sql
-SELECT * FROM ;
+SELECT MIN(utilise.levelAttaque) 
+FROM utilise
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+WHERE attaque.nom = 'attaque1';
 ```
 
-81. 
+86. Récupérer le personnage utilisant l'attaque 1 avec le levelAttaque le plus haut
 ``` sql
-SELECT * FROM ;
+/* EXEMPLE DE REUQUETE FAUSSE:
+SELECT personnage.idPersonnage, personnage.nom as 'Personnage', MAX(utilise.levelAttaque) 
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+WHERE attaque.nom = 'attaque1';
+*/
+SELECT personnage.idPersonnage, personnage.nom as 'Personnage', utilise.levelAttaque 
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+WHERE attaque.nom = 'attaque1'
+HAVING utilise.levelAttaque > ALL
+(SELECT utilise.levelAttaque
+ FROM utilise
+ INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+ WHERE attaque.nom = 'attaque1'
+ )
 ```
 
-82. 
+87. Calculer le nombre de dégats que fait chaque personnage (degat * (0,5 * level du personnage))
 ``` sql
-SELECT * FROM ;
+SELECT personnage.idPersonnage, personnage.nom as 'Personnage', (arme.degat * 0.5 * personnage.level) as 'Dégat du perso' 
+FROM personnage
+INNER JOIN arme on personnage.idArmeUtilise = arme.idArme
+ORDER BY (arme.degat * 0.5 * personnage.level) DESC;
 ```
 
-83. 
+88. En déduire l'arme utilisé pour avoir le plus grande nombre de dégats
+
 ``` sql
-SELECT * FROM ;
+SELECT arme.nom as 'Arme', Max(arme.degat * 0.5 * personnage.level) as 'Dégat' 
+FROM personnage
+INNER JOIN arme on personnage.idArmeUtilise = arme.idArme;
 ```
 
-84. 
+89. Récupérer le nombre de personnages faisant moins de dégat que 100
 ``` sql
-SELECT * FROM ;
+SELECT COUNT(personnage.nom) as 'Nombre de personnages faisant moins de dégat que 100' 
+FROM personnage
+INNER JOIN arme on personnage.idArmeUtilise = arme.idArme
+WHERE (arme.degat * 0.5 * personnage.level) < 100;
+
+-- Deuxième façon :
+SELECT personnage.idPersonnage, personnage.nom as 'Personnage', (arme.degat * 0.5 * personnage.level) as 'Dégat' 
+FROM personnage
+INNER JOIN arme on personnage.idArmeUtilise = arme.idArme
+HAVING Dégat < 100
+ORDER BY (arme.degat * 0.5 * personnage.level) DESC;
 ```
 
-85. 
+90. Afficher le nombre de lignes présentes dans la table 'utilise'
 ``` sql
-SELECT * FROM ;
+SELECT COUNT(*)
+FROM utilise;
 ```
 
-86. 
+91. Afficher le nombre d'attaque par personnage
 ``` sql
-SELECT * FROM ;
+SELECT personnage.idPersonnage, personnage.nom as 'Personnage', COUNT(attaque.nom) as 'Nombre dattaque'
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+GROUP BY personnage.nom;
 ```
 
-87. 
+92. Afficher le (les) personnage(s) ayant le plus d'attaques
 ``` sql
-SELECT * FROM ;
+SELECT personnage.idPersonnage, personnage.nom as 'Personnage', COUNT(*) as 'Nombre dattaque'
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+GROUP BY personnage.nom
+HAVING COUNT(*) >= ALL
+( SELECT COUNT(*) 
+FROM personnage
+INNER JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+INNER JOIN attaque on attaque.idAttaque = utilise.idAttaque
+GROUP BY personnage.nom
+)
+-- la plus difficile pour moi
 ```
 
-88. 
+93. Afficher le (les) personnage(s) ayant le moins d'attaques
+
 ``` sql
-SELECT * FROM ;
+SELECT personnage.idPersonnage, personnage.nom as 'Personnage', COUNT(attaque.idAttaque) as 'Nombre dattaque'
+FROM personnage
+LEFT JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+LEFT JOIN attaque on attaque.idAttaque = utilise.idAttaque
+GROUP BY personnage.nom
+HAVING COUNT(attaque.idAttaque) <= ALL
+( SELECT COUNT(attaque.idAttaque) 
+FROM personnage
+LEFT JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+LEFT JOIN attaque on attaque.idAttaque = utilise.idAttaque
+GROUP BY personnage.nom
+)
+-- on remarque deux choses : l'importance du type de jointure et sur quoi on applique le COUNT(), pour avoir les bons résultats
 ```
 
-89. 
+94. Afficher les personnage nés avant 2003
 ``` sql
-SELECT * FROM ;
+SELECT personnage.idPersonnage, personnage.nom as 'Personnage', personnage.dateNaissance
+FROM personnage
+WHERE YEAR(dateNaissance) < '2003';
 ```
 
-90. 
+95. Ajouter les 3 attaques suivantes : Coup de pied : 20 dégats, Coup de poing : 15 dégats, Balayette : 5 dégats
 ``` sql
-SELECT * FROM ;
+INSERT INTO attaque (nom, baseDegat) VALUES ('Balayette', 5);
+INSERT INTO attaque (nom, baseDegat) VALUES ('Coup de pied', 20);
+INSERT INTO attaque (nom, baseDegat) VALUES ('Coup de poing', 15);
+-- on peut aussi ajouter directement sur l'interface phpmyadmin
 ```
 
-91. 
+96. Récupérer les attaque qui ne commence pas par 'Coup'
 ``` sql
-SELECT * FROM ;
+SELECT *
+FROM attaque
+WHERE SUBSTRING(attaque.nom,1,4) != 'Coup'
+
+-- Deuxième façon :
+SELECT *
+FROM attaque
+WHERE attaque.nom NOT LIKE 'Coup%'
 ```
 
-92. 
+97. Modifier les attaques commençant par 'Coup' pour leur rajouter 20 points de dégâts
+
 ``` sql
-SELECT * FROM ;
+UPDATE attaque
+SET attaque.baseDegat = attaque.baseDegat + 20
+WHERE attaque.nom LIKE 'Coup%';
+
+SELECT *
+FROM attaque;
 ```
 
-93. 
+98. Supprimer les attaques 1, 2 et 3
 ``` sql
-SELECT * FROM ;
-```
+DELETE FROM attaque
+WHERE idAttaque = 1 AND idAttaque = 2 AND idAttaque = 3;
 
-94. 
-``` sql
-SELECT * FROM ;
-```
-
-95. 
-``` sql
-SELECT * FROM ;
-```
-
-96. 
-``` sql
-SELECT * FROM ;
-```
-
-97. 
-``` sql
-SELECT * FROM ;
-```
-
-98. 
-``` sql
-SELECT * FROM ;
-```
-
-99. 
-``` sql
-SELECT * FROM ;
-```
-
-100. 
-``` sql
-SELECT * FROM ;
+-- Deuxième façon :
+DELETE FROM attaque
+WHERE attaque.nom LIKE 'attaque%';
 ```
 
 
+99. Récupérer toutes les informations possibles sur tous les personnages
+
+``` sql
+SELECT *
+FROM personnage
+LEFT JOIN utilise on personnage.idPersonnage = utilise.idPersonnage
+LEFT JOIN attaque on attaque.idAttaque = utilise.idAttaque
+LEFT JOIN dispose on personnage.idPersonnage = dispose.idPersonnage
+LEFT JOIN arme on arme.idArme = dispose.idArme
+LEFT JOIN typearme on typearme.idTypeArme = arme.idTypeArme
+LEFT JOIN classe on classe.idClasse = personnage.idClasse;
+-- Attention au type de jointure
+```
+
+
+100. Supprimer les personnages nés avant 2003
+``` sql
+DELETE FROM personnage
+WHERE YEAR(personnage.dateNaissance) < '2003';
+-- pas faisable, car les personnages sont présent dans autres tables (dispose) et l'option de supprimer (ON DELETE) dans cette table est 'RESTRICT' et non pas 'CASCADE'
+-- et donc on doit supprimer la contrainte 'FK_PERSONNAGE' des clés étrangères et là rajouter après
+ALTER TABLE dispose
+DROP FOREIGN KEY FK_PERSONNAGE;
+--
+ALTER TABLE dispose
+ADD CONSTRAINT FK_PERSONNAGE
+FOREIGN KEY (idPersonnage) REFERENCES Personnage(idPersonnage) ON DELETE CASCADE;
+-- on aurait pu le faire sur l'interface directement 
+
+DELETE FROM personnage
+WHERE YEAR(personnage.dateNaissance) < '2003';
+
+SELECT *
+FROM personnage;
+```
 
 
 ## License
