@@ -1,4 +1,4 @@
-# 100 SQL Queries
+# 100 SQL Queries Challenge
 
 
 
@@ -998,4 +998,4 @@ FROM personnage;
 
 🌐 My Portfolio: <https://kebiri-isam-dine.github.io/>
 
-🔗 Project Link: <https://github.com/kebiri-isam-dine/100_SQL_Queries>
+🔗 Project Link: <https://github.com/kebiri-isam-dine/100_SQL_Queries_Challenge>
